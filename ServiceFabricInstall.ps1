@@ -1,7 +1,8 @@
 function Download-Executable ($count){
     try{
-        New-NetFirewallRule -DisplayName "Allow Outbound Port 8443" -Direction Outbound -LocalPort 8443 -Protocol RPC -Action Allow
-        New-NetFirewallRule -DisplayName "Allow Inbound Port 8443" -Direction Inbound -LocalPort 8443 -Protocol TCP -Action Allow
+        <# Port must be changed to 8443 for an on-premise installation #>
+        New-NetFirewallRule -DisplayName "Allow Outbound Port 8443" -Direction Outbound -LocalPort 443 -Protocol RPC -Action Allow
+        New-NetFirewallRule -DisplayName "Allow Inbound Port 8443" -Direction Inbound -LocalPort 443 -Protocol TCP -Action Allow
 
         $User = "<AQUA_USER>"
         $PWord = ConvertTo-SecureString -String "<AQUA_PASSWORD>" -AsPlainText -Force
@@ -10,7 +11,8 @@ function Download-Executable ($count){
         $destination = 'AquaAgentWindowsInstaller.msi'
         Invoke-WebRequest -UseBasicParsing -Uri $source -OutFile $destination -Credential $Credential
 
-        msiexec /I AquaAgentWindowsInstaller.msi AQUA_TOKEN=<TOKEN_FROM_UI> AQUA_SERVER=<GATEWAY_ADDRESS>:8443 /qn
+        <# Port must be changed to 8443 for an on premise installation #>
+        msiexec /I AquaAgentWindowsInstaller.msi AQUA_TOKEN=<TOKEN_FROM_UI> AQUA_SERVER=<GATEWAY_ADDRESS>:443 /qn
 
         Write-Host "Completed Successfully"
     }
